@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { environment } from '../environments/environment'
-import { EnrollmentResult, Initializer, WebAuthnEnrollment } from '@trusona/webauthn'
+import { EnrollmentResult, Initializer, WebAuthnAuthentication, WebAuthnEnrollment } from '@trusona/webauthn'
 
 @Component({
   selector: 'app-root',
@@ -8,9 +8,12 @@ import { EnrollmentResult, Initializer, WebAuthnEnrollment } from '@trusona/weba
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  @ViewChild('msg') msgContainer!: ElementRef;
+  @ViewChild('msg') msgContainer!: ElementRef
+  @ViewChild('submitBtn') submitContainer!: ElementRef
 
   username: string = ''
+  disableUsername = false
+  enrolled = false
 
   ngOnInit (): void {
     Initializer.initialize(environment.sdkId, environment.sdkEnvironment)
@@ -23,19 +26,59 @@ export class AppComponent implements OnInit {
   }
 
   submission (): void {
+    if (this.enrolled) {
+      this.authenticate()
+    } else {
+      this.enroll()
+    }
+  }
+
+  reset (): void {
+    this.submitContainer.nativeElement.innerHTML = 'Submit'
+    this.disableUsername = false
+    this.enrolled = false
+    this.username = ''
+  }
+
+  authenticate (): void {
+    const controller: AbortController = new AbortController()
+    const usernameHint: string | undefined = this.username
+
+    new WebAuthnAuthentication().authenticate(controller.signal, usernameHint)
+      .then((map) => {
+        const idToken: string = map.idToken
+        const jwksEndpoint: string = Initializer.jwksEndpoint
+
+        //
+        // Verify the JWT against the Trusona's JWKS implementation endpoint.
+        //
+        // A "subject" claim will have the username of the authenticated user.
+        //
+      })
+      .catch((error) => {
+        this.msgContainer.nativeElement.innerHTML = error.message
+      })
+  }
+
+  private enroll (): void {
     if (this.username !== '') {
       this.jwtApi()
         .then((value) => {
           this.enrollment(value)
-            .then((status) => {
-              console.log(status)
+            .then((_) => {
+              this.msgContainer.nativeElement.innerHTML = 'You have successfully enrolled. Click on "Sign In".'
+              this.submitContainer.nativeElement.innerHTML = 'Sign In'
+              this.disableUsername = true
+              this.enrolled = true
             })
             .catch((error) => {
               this.msgContainer.nativeElement.innerHTML = error.message
+              this.disableUsername = false
             })
         })
         .catch(() => {
           this.msgContainer.nativeElement.innerHTML = 'failed to load JWT'
+          this.disableUsername = true
         })
     }
   }

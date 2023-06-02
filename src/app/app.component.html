@@ -16,7 +16,7 @@
         <form method="post">
           <div class="">           
             <input
-              [(ngModel)]="username" [ngModelOptions]="{standalone: true}" ng-disabled="false" ng-model="input"
+              [(ngModel)]="username" [ngModelOptions]="{standalone: true}" ng-disabled="false" ng-model="input" #uid
               id="username"
               name="username"
               type="text"
@@ -28,13 +28,14 @@
               autocapitalize="no"
               size="32"
               maxlength="32"
+              [readonly]="disableUsername"
               class="shadow appearance-none border mb-12 p-2 rounded text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
           <div class="pt-8 center">
             <!-- (keyup.code.enter)="submission($event)" -->
           <button          
-            (click)="submission()"
+            (click)="submission()" #submitBtn
             id="submitBtn"
             data-next="submit"
             class="bg-purple-500 text-white font-normal lg:font-semibold rounded focus:outline-none focus:shadow-outline px-2 py-1 w-24"
@@ -44,6 +45,7 @@
           </button>
 
           <button
+          (click)="reset()"
             id="resetBtn"
             data-next="reset"
             class="bg-gray-500 text-white font-normal lg:font-semibold rounded focus:outline-none focus:shadow-outline px-2 py-1 ml-2 w-24"
@@ -60,10 +62,10 @@
       <div class="text-base font-light mt-8 text-gray-700 max-w-max ">
         <div class="flex place-content-center">
           <div class="align-middle">
-            <span #msg id="msg">If you've previously enrolled, you may <a href='#' class="underline" data-next='sign_in' onclick="next(event);">sign in</a>.
+            <span #msg id="msg">If you've previously enrolled, you may <a href='#' (click)="authenticate()" class="underline" data-next='sign_in'>sign in</a>.
             </span>
             <p>&nbsp;</p>
-            <span id="authAgain" class="hidden">You can sign in <a href="#" class="underline" data-next="sign_in" onclick="next(event);">again</a>!</span>
+            <span id="authAgain" class="hidden">You can sign in <a href="#" class="underline" data-next="sign_in">again</a>!</span>
           </div>
         </div>
       </div>
