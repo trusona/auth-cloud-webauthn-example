@@ -1,5 +1,5 @@
 {
-  "name": "angular.io-example",
+  "name": "auth-cloud-webauthn-example",
   "version": "0.0.0",
   "description": "Example project from an angular.io guide.",
   "license": "MIT",
@@ -8,7 +8,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "heroku-postbuild": "ng build"
+    "heroku-postbuild": "ng build --configuration production"
   },
   "private": true,
   "dependencies": {
