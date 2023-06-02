@@ -46,8 +46,15 @@ export class AppComponent implements OnInit {
 
     new WebAuthnAuthentication().authenticate(controller.signal, usernameHint)
       .then((map) => {
+        // const jwksEndpoint: string = Initializer.jwksEndpoint - in production you *SHOULD* verify the id token with this JWKS
         const idToken: string = map.idToken
-        const jwksEndpoint: string = Initializer.jwksEndpoint
+        const subject: string = JSON.parse(window.atob(idToken.split('.')[1])).sub
+
+        const status = `You have successfully signed in as <span class="font-semibold text-purple-500">${subject}</span>.`
+
+        this.msgContainer.nativeElement.innerHTML = status
+        this.enrolled = true
+        this.username = ''
 
         //
         // Verify the JWT against the Trusona's JWKS implementation endpoint.
