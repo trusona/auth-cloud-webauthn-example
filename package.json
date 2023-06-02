@@ -30,7 +30,7 @@
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
-    "@types/node": "^16.11.35",
+    "@types/node": "^16.18.34",
     "ts-node": "~10.9.0",
     "typescript": "~4.9.3"
   },
