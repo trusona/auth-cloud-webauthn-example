@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular.io-example": {
+    "auth-cloud-webauthn-example": {
       "projectType": "application",
       "root": "",
       "sourceRoot": "src",
@@ -57,13 +57,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "angular.io-example:build:production"
+              "browserTarget": "auth-cloud-webauthn-example:build:production"
             },
             "development": {
-              "browserTarget": "angular.io-example:build:development"
+              "browserTarget": "auth-cloud-webauthn-example:build:development"
             }
           },
-          "defaultConfiguration": "development"        
+          "defaultConfiguration": "development"
         }
       }
     }
