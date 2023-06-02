@@ -5,5 +5,7 @@ Publicly deployed at https://webauthn-sdk-example.lab.trusona.net
 To run:
 
 ```bash
-foreman start
+# "npm install" of course, then
+
+npm start
 ```
