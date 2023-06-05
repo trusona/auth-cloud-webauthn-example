@@ -34,10 +34,7 @@ export class AppComponent implements OnInit {
   }
 
   reset (): void {
-    this.submitContainer.nativeElement.innerHTML = 'Submit'
-    this.disableUsername = false
-    this.enrolled = false
-    this.username = ''
+    location.reload()
   }
 
   authenticate (): void {
@@ -46,7 +43,8 @@ export class AppComponent implements OnInit {
 
     new WebAuthnAuthentication().authenticate(controller.signal, usernameHint)
       .then((map) => {
-        // const jwksEndpoint: string = Initializer.jwksEndpoint - in production you *SHOULD* verify the id token with this JWKS
+        // In production you *SHOULD* verify the id token with this JWKS
+        // const jwksEndpoint: string = Initializer.jwksEndpoint
         const idToken: string = map.idToken
         const subject: string = JSON.parse(window.atob(idToken.split('.')[1])).sub
 
