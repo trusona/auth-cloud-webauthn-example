@@ -25,12 +25,13 @@ export class AppComponent implements OnInit {
       })
   }
 
-  submission (): void {
+  submission (): boolean {
     if (this.enrolled) {
       this.authenticate()
     } else {
       this.enroll()
     }
+    return false
   }
 
   reset (): void {
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit {
 
     new WebAuthnAuthentication().authenticate(controller.signal, usernameHint)
       .then((map) => {
-        // In production you *SHOULD* verify the id token with this JWKS
+        // In production you *SHOULD* verify the id token with this JWKS via your backend services.
         // const jwksEndpoint: string = Initializer.jwksEndpoint
         const idToken: string = map.idToken
         const subject: string = JSON.parse(window.atob(idToken.split('.')[1])).sub
@@ -53,12 +54,6 @@ export class AppComponent implements OnInit {
         this.msgContainer.nativeElement.innerHTML = status
         this.enrolled = true
         this.username = ''
-
-        //
-        // Verify the JWT against the Trusona's JWKS implementation endpoint.
-        //
-        // A "subject" claim will have the username of the authenticated user.
-        //
       })
       .catch((error) => {
         this.msgContainer.nativeElement.innerHTML = error.message
