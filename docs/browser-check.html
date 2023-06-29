@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <base href="/">
+  <title>browser check</title>
+  <style>
+    .button-container{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  </style>
+  <script>
+    async function isSupported(){
+      const value = typeof window.PublicKeyCredential !== 'undefined' &&
+      (await this.isUserVerifyingPlatformAuthenticatorAvailable()).valueOf() &&
+      (await this.isConditionalMediationAvailable()).valueOf();
+
+      return await Promise.resolve(value);
+    }
+
+    function browserCheckSDKStyle(){
+      let result = "false";
+      result = await isSupported();
+      alert("Result: "+result);
+    }
+
+    function browserCheckPlain(){
+      let webauthn = "true";
+      let autofill = "true";
+      let platformAuth = "true";
+
+      // first check if webauthn is available
+      if(typeof window.PublicKeyCredential === "function" && window.PublicKeyCredential) {
+        console.log("This browser DOES support webauthn.");
+        const pkCred = PublicKeyCredential;
+        // Check if passkey autofill (conditional mediation) is available
+        if(typeof pkCred.isConditionalMediationAvailable === "function" && pkCred.isConditionalMediationAvailable){
+          console.log("This browser DOES support passkey autofill (conditional mediation).");
+        } else {
+          console.log("This browser does NOT support passkey autofill (conditional mediation).");
+          autofill = "false";
+        }
+
+        // Check if platform authenticator is available
+        pkCred.isUserVerifyingPlatformAuthenticatorAvailable()
+          .then((pa_available) => {
+            if (pa_available){
+              console.log("This browser DOES support a platform authenticator.");
+            } else {
+              console.log("This browser does NOT support a platform authenticator.");
+              platformAuth = "false";
+            }
+          })
+          .catch((err) => console.log("Something went wrong."));
+      } else {
+        console.log("This browser does NOT support webauthn.")
+        webauthn = "false";
+        autofill = "n/a";
+        platformAuth = "n/a";
+      }    
+      alert("Results\nwebauthn: "+webauthn+"\nautofill: "+autofill+"\nplatformAuth: "+platformAuth);
+    }
+  </script>
+</head>
+<body>
+  <div class="button-container">
+    <button onclick="browserCheckSDKStyle()">Check using SDK tyle</button>
+    <button onclick="browserCheckPlain()">Check using plain style</button>
+  </div>
+</body>
+</html>
