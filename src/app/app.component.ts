@@ -1,13 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
+import { Component, ElementRef, AfterContentInit, ViewChild } from '@angular/core'
 import { environment } from '../environments/environment'
-import { EnrollmentResult, Initializer, WebAuthnAuthentication, WebAuthnEnrollment } from '@trusona/webauthn'
+import { DefaultPreflightChecks, Preflight, EnrollmentResult, Initializer, WebAuthnAuthentication, WebAuthnEnrollment } from '@trusona/webauthn'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements AfterContentInit {
   @ViewChild('msg') msgContainer!: ElementRef
   @ViewChild('submitBtn') submitContainer!: ElementRef
 
@@ -15,14 +15,25 @@ export class AppComponent implements OnInit {
   disableUsername = false
   enrolled = false
 
-  ngOnInit (): void {
-    Initializer.initialize(environment.sdkId, environment.sdkEnvironment)
+  private webauthnFeatures!: Preflight
+
+  canWebauthn: string = '🚫'
+  hasPlatformAuthenticator: string = '🚫'
+  canAutofill: string = '🚫'
+
+  async ngAfterContentInit (): Promise<void> {
+    Initializer.initialize(environment.sdkOrigin)
       .then(() => {
         console.log('initialized the sdk!')
       })
       .catch(() => {
         this.msgContainer.nativeElement.innerHTML = 'failed sdk initialization'
       })
+    
+      this.webauthnFeatures = await DefaultPreflightChecks.check()
+      this.canWebauthn = this.webauthnFeatures.webauthn ? '✅' : '🚫'
+      this.hasPlatformAuthenticator = this.webauthnFeatures.platformAuthenticator ? '✅' : '🚫'
+      this.canAutofill = this.webauthnFeatures.conditionalMediation ? '✅' : '🚫'
   }
 
   submission (): void {

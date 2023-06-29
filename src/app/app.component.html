@@ -66,10 +66,15 @@
             </span>
             <p>&nbsp;</p>
             <span id="authAgain" class="hidden">You can sign in <a href="#" class="underline" data-next="sign_in">again</a>!</span>
-          </div>
+            <p>&nbsp;</p>
+            <p>{{canWebauthn}} browser supports webauthn.</p>
+            <p>{{hasPlatformAuthenticator}} browser has platform authenticator.</p>
+            <p>{{canAutofill}} browser supports autofill.</p>             </div>
         </div>
       </div>
       <div id="credentials" class="p-4"></div>
+      <div class="text-base font-light mt-8 text-gray-700 max-w-max ">
+      </div>
     </div>
   </div>
 </div>
