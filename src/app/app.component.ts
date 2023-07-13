@@ -1,6 +1,6 @@
 import { Component, ElementRef, AfterContentInit, ViewChild } from '@angular/core'
 import { environment } from '../environments/environment'
-import { DefaultPreflightChecks, Preflight, EnrollmentResult, Initializer, WebAuthnAuthentication, WebAuthnEnrollment } from '@trusona/webauthn'
+import { EnrollmentResult, Initializer, WebAuthnAuthentication, WebAuthnEnrollment } from '@trusona/webauthn'
 
 @Component({
   selector: 'app-root',
@@ -23,14 +23,14 @@ export class AppComponent implements AfterContentInit {
     Initializer.initialize(environment.sdkOrigin)
       .then(() => {
         console.log('initialized the sdk!')
+
+        this.hasPlatformAuthenticator = Initializer.webauthnFeatures.platformAuthenticator ? '✅' : '🚫'
+        this.canAutofill = Initializer.webauthnFeatures.conditionalMediation ? '✅' : '🚫'
+        this.canWebauthn = Initializer.webauthnFeatures.webauthn ? '✅' : '🚫'
       })
       .catch(() => {
         this.msgContainer.nativeElement.innerHTML = 'failed sdk initialization'
       })
-    
-      this.canWebauthn = Initializer.webauthnFeatures.webauthn ? '✅' : '🚫'
-      this.hasPlatformAuthenticator = Initializer.webauthnFeatures.platformAuthenticator ? '✅' : '🚫'
-      this.canAutofill = Initializer.webauthnFeatures.conditionalMediation ? '✅' : '🚫'
   }
 
   submission (): void {
