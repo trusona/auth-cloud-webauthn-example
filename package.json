@@ -22,7 +22,7 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
-    "@trusona/webauthn": "1.3.0",
+    "@trusona/webauthn": "1.3.1",
     "rxjs": "~7.8.1",
     "tslib": "^2.5.3",
     "zone.js": "~0.13.0"

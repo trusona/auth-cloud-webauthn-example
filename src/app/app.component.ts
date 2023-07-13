@@ -15,8 +15,6 @@ export class AppComponent implements AfterContentInit {
   disableUsername = false
   enrolled = false
 
-  private webauthnFeatures!: Preflight
-
   canWebauthn: string = '🚫'
   hasPlatformAuthenticator: string = '🚫'
   canAutofill: string = '🚫'
@@ -30,10 +28,9 @@ export class AppComponent implements AfterContentInit {
         this.msgContainer.nativeElement.innerHTML = 'failed sdk initialization'
       })
     
-      this.webauthnFeatures = await DefaultPreflightChecks.check()
-      this.canWebauthn = this.webauthnFeatures.webauthn ? '✅' : '🚫'
-      this.hasPlatformAuthenticator = this.webauthnFeatures.platformAuthenticator ? '✅' : '🚫'
-      this.canAutofill = this.webauthnFeatures.conditionalMediation ? '✅' : '🚫'
+      this.canWebauthn = Initializer.webauthnFeatures.webauthn ? '✅' : '🚫'
+      this.hasPlatformAuthenticator = Initializer.webauthnFeatures.platformAuthenticator ? '✅' : '🚫'
+      this.canAutofill = Initializer.webauthnFeatures.conditionalMediation ? '✅' : '🚫'
   }
 
   submission (): void {
@@ -100,8 +97,7 @@ export class AppComponent implements AfterContentInit {
   }
 
   private async enrollment (jwt: string): Promise<EnrollmentResult> {
-    const controller: AbortController = new AbortController()
-    return await new WebAuthnEnrollment().enroll(jwt, controller.signal)
+    return await new WebAuthnEnrollment().enroll(jwt)
   }
 
   private async jwtApi (): Promise<string> {
